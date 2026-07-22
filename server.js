@@ -59,10 +59,13 @@ app.post('/api/check-uid', async (req, res) => {
       return res.json({ message: errorMsg });
     }
   } catch (err) {
+    console.error('FULL ERROR:', err.message);
+    console.error('RESPONSE DATA:', err.response?.data);
+    console.error('STATUS:', err.response?.status);
     if (err.code === 'ECONNABORTED') {
-      return res.json({ message: 'Server took too long. Please try again.' });
+      return res.json({ valid: false, message: 'Server took too long. Please try again.' });
     }
-    return res.json({ message: 'Connection error.' });
+    return res.json({ valid: false, message: err.message, debug: err.response?.data || null });
   }
 });
 
